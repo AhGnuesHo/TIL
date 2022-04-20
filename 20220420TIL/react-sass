@@ -1,0 +1,186 @@
+sass는 css가 너무 길어지는 경우 사용하는 것으로 좀 더 프로그래밍 언어답게 css를 작성할 수 있는 문법이다. 
+
+프로그래밍 언어스럽게 sass는 변수, 함수, 반복문, 연산자등을 이용해서 css를 간결하게 나타낼 수 있다. 
+_____
+### 설치
+아래 명령어를 터미널에 입력해서 설치하자
+> yarn add node-sass
+
+css는 단순하고 노가다성이 짖은 원초적인 스타일링 언어이기 때문에 css를 대체할 수 있는 sass를 사용하는 것이다. 
+
+node-sass 라이브러리는 sass를 사용해 스타일을 작성한 것은 css로 컴파일해주는 역할을 한다. 
+
+___
+### 생성
+
+css파일만들듯이 sass는 **파일명.scss**라는 파일로 생성하면 된다. 
+~~~css
+(Detail.scss 파일)
+
+.red {
+  color : #ff0000;
+}
+~~~
+_____
+### SASS문법
+#### 1. 변수사용
+sass에서는 변수를 사용할 수 있다. 
+
+~~~css
+(Detail.scss 파일)
+
+.red {
+  color : red;
+}
+~~~
+위 코드를 변수를 사용해 아래와 같이 바꿀 수 있다. 
+~~~css
+(Detail.scss 파일)
+$메인색상 : #ff0000;
+.red {
+  color : $메인색상;
+}
+~~~
+**$변수명 : 집어넣을값;**
+이렇게 변수를 만들면 원하는 곳에서 변수를 사용 할 수 있다. 
+
+색상뿐만아니라 px, %등도 사용 할 수 있다.
+
+____
+#### 2. @import
+@import는 사실 css문법이긴 하나, sass 또한 파일간 임포트를 할 수 있으므로 알아보고 넘어가자.
+
+작성한 css를 사용하고 싶은 js파일등에서 다음과 같이 사용하면 된다.
+>  @import './어쩌구.css';
+
+**임포트는 전체 페이지에서 자주 사용하는 스타일들이 있을 경우 따로 빼놓고 필요한 경우만 @import 해서 사용하면 편리하다. **
+
+___
+#### 3. nesting 
+css를 작성하다보면 아래와 같이 셀렉터를 길고 복잡하게 써야하는 경우가 있다.
+~~~ css
+div.container h4 {
+  color : blue;
+}
+div.container p {
+  color : green;
+}
+~~~
+nesting문법을 사용하면 아래와 같이 좀 더 **가독성있게 **작성할 수 있게 되며 관련 **class끼리 한꺼번에 관리**하기 편해진다. 
+~~~css
+div.container {
+  h4 {
+    color : blue;
+  }
+  p {
+    color : green;
+  }
+}
+~~~
+____
+#### 4. extends
+아래와 같은 스타일이 있다고 가정해보자.
+~~~css
+(Detail.scss 파일)
+
+.my-alert {
+  background : #eeeeee;
+  padding : 15px;
+  border-radius : 5px;
+  max-width : 500px;
+  width : 100%;
+  margin : auto;
+}
+.my-alert p {
+  margin-bottom : 0;
+}
+~~~
+
+작은 회색 알림창이 뜰것이다. 
+
+그리고 똑같은 스타일을 가지면서 배경색만 다른 스타일이 여러개 필요하다면 어떻게 해야할까?
+
+~~~css
+(Detail.scss 파일)
+
+.my-alert {
+  background : #eeeeee;
+  padding : 15px;
+  border-radius : 5px;
+  max-width : 500px;
+  width : 100%;
+  margin : auto;
+}
+
+.my-alert2 {
+  background : #yellow;
+  padding : 15px;
+  border-radius : 5px;
+  max-width : 500px;
+  width : 100%;
+  margin : auto;
+}
+~~~
+이렇게 배경색을 제외한 나머지 스타일을 복사 붙여넣기 해야할까?
+
+@extend를 사용하면 손수 복사 붙여넣기하지 않고도 스타일을 가져올 수 있다. 
+
+~~~css
+(Detail.scss 파일)
+
+.my-alert {
+  background : #eeeeee;
+  padding : 15px;
+  border-radius : 5px;
+  max-width : 500px;
+  width : 100%;
+  margin : auto;
+}
+.my-alert2 {
+  @extend .my-alert;
+  background : yellow;
+}
+
+.my-alert p {
+  margin-bottom : 0;
+}
+~~~
+.my-alert2는 background를 제외한 나머지 스타일은 my-alert에서 @extends하였다. 
+
+즉, @extends를 사용하면 코드 재사용을 쉽게 할 수 있다. 
+____
+#### @mixin/@include
+**mixin은 함수를 만드는 문법이고, include는 함수를 사용하는 문법이다. **
+
+~~~js
+function 함수(){
+}
+~~~
+js에서 위와 같이 함수를 만들듯이 mixin을 사용하여 함수를 만들 수 있다. 
+
+~~~css
+(Detail.scss 파일)
+
+@mixin 함수() {
+  background : #eeeeee;
+  padding : 15px;
+  border-radius : 5px;
+  max-width : 500px;
+  width : 100%;
+  margin : auto;
+}
+.my-alert {
+  @include 함수()
+}
+
+.my-alert p {
+  margin-bottom : 0;
+}
+~~~
+함수라는 mixin을 만들고, 함수를 my-alert에 include했다. 
+작성한 함수를 사용하려면 @include를 함수명 앞에 작성하면 된다. 
+
+> **참고**
+scss는 자바스크립트 문법과는 다르게 함수명이 위에 선언되어있어야 밑에서 사용가능하다.
+
+
